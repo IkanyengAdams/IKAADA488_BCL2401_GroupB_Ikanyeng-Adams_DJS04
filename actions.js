@@ -1,19 +1,19 @@
 // actual functions
 
-const increase = (state) => {
+export const increase = (state) => {
   return {
     ...state,
     value: state.value + 1,
   };
 };
 
-const decrease = (state) => {
+export const decrease = (state) => {
   return {
     ...state,
     value: state.value - 1,
   };
 };
 
-const get = (state, key) => {
+export const get = (state, key) => {
   return state[key];
 }

@@ -1,13 +1,6 @@
 /**
- * @typedef {object} Item
- * @prop {number} value
- */
-
-/**
- * @typedef {objects} state
- * @prop {Item} wind
- * @prop {Item} temperature
- * @prop {Item} humidity
+ * @typedef {object} State 
+ * @prop {number} count
  */
 
 /**
@@ -18,9 +11,11 @@
 
 /**
  * @callback Action
- * @param {State}
+ * @param {State} state
  * @returns {State}
  */
+
+
 
 /**
  * @callback Update
@@ -33,62 +28,92 @@
  */
 
 /**
- * @typedef {objects} store
+ * @callback EmptyFn
+ */
+
+/**
+ * @typedef {object} store
  * @prop {Update} update
  * @prop {Subscribe} subscribe
+ * @prop {() => state} getState
  */
 
 
 
 // initial store
 const initial = {
-   wind: {
-    value: 1,
-   },
-   temperature: {
-    value: 1,
-   },
-   humidity: {
-    value: 1,
-   },
+   const: 0
 };
 
 /**
  * @type {Array<State>}
  */
-  const states = [initial];
+  const state = [initial];
 
 /**
  * @type {Array<Notify>}
  */
   let notifiers = [];
 
+  /**
+   * @param {Action} action 
+   */
   export const update = (action) => {
     if (typeof action !== "function") {
-      throw new Error("action is required to be function")
+      throw new Error("action is required to be function");
     }
     
-    const prev = objects.freeze({  ...states[0] });
-    const next = objects.freeze({ ...action(prev) });
+    const prev = Object.freeze({...state[0]});
+    const next = Object.freeze({...action(prev) });
 
-    states.unshift(next);
+    const handler = (notify) => notify(next, prev);
+    notifiers.forEach(handler);
+    state.unshift(next);
   };
 
   /**
    * @param {Notify} notify
-   * @returns
+   * @returns {EmptyFn}
    */
 
   export const subscribe = (notify) => {
     notifiers.push(notify);
 
     const unsubscribe = () => {
-      const result = notifiers.filter(
-        
-      )
-    }
-
+      notifiers = notifiers.filter((current) => current !== notify);
+    };
+  
     return unsubscribe;
+  };
+  
+  /**
+   * @returns {State}
+   */
+  export const getState = () => {
+    return state[0];
+  };
+  
+  // Action creators
+  export const add = (state) => ({
+    ...state,
+    count: state.count + 1
+  });
+  
+  export const subtract = (state) => ({
+    ...state,
+    count: state.count - 1
+  });
+  
+  export const reset = (state) => ({
+    ...state,
+    count: 0
+  });
+  
+  // Exporting store object with methods
+  export const store = {
+    update,
+    subscribe,
+    getState
   };
 
   
