@@ -1,19 +1,15 @@
-// actual functions
+// Action creators
+export const add = (state) => ({
+  ...state,
+  count: state.count + 1
+});
 
-export const increase = (state) => {
-  return {
-    ...state,
-    value: state.value + 1,
-  };
-};
+export const subtract = (state) => ({
+  ...state,
+  count: state.count - 1
+});
 
-export const decrease = (state) => {
-  return {
-    ...state,
-    value: state.value - 1,
-  };
-};
-
-export const get = (state, key) => {
-  return state[key];
-}
+export const reset = (state) => ({
+  ...state,
+  count: 0
+});

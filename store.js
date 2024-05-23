@@ -93,22 +93,7 @@ const initial = {
     return state[0];
   };
   
-  // Action creators
-  export const add = (state) => ({
-    ...state,
-    count: state.count + 1
-  });
-  
-  export const subtract = (state) => ({
-    ...state,
-    count: state.count - 1
-  });
-  
-  export const reset = (state) => ({
-    ...state,
-    count: 0
-  });
-  
+ 
   // Exporting store object with methods
   export const store = {
     update,
