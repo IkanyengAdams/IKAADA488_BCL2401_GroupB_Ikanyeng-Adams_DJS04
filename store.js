@@ -1,5 +1,5 @@
 /**
- * @typedef {object} State 
+ * @typedef {object} State
  * @prop {number} count
  */
 
@@ -15,11 +15,9 @@
  * @returns {State}
  */
 
-
-
 /**
  * @callback Update
- * @param {Action}
+ * @param {Action} action
  */
 
 /**
@@ -32,73 +30,67 @@
  */
 
 /**
- * @typedef {object} store
+ * @typedef {object} Store
  * @prop {Update} update
  * @prop {Subscribe} subscribe
- * @prop {() => state} getState
+ * @prop {() => State} getState
  */
 
-
-
-// initial store
+// Initial state
 const initial = {
-   const: 0
+  count: 0
 };
 
 /**
  * @type {Array<State>}
  */
-  const state = [initial];
+const state = [initial];
 
 /**
  * @type {Array<Notify>}
  */
-  let notifiers = [];
+let notifiers = [];
 
-  /**
-   * @param {Action} action 
-   */
-  export const update = (action) => {
-    if (typeof action !== "function") {
-      throw new Error("action is required to be function");
-    }
-    
-    const prev = Object.freeze({...state[0]});
-    const next = Object.freeze({...action(prev) });
+/**
+ * @param {Action} action
+ */
+export const update = (action) => {
+  if (typeof action !== "function") {
+    throw new Error("action is required to be a function");
+  }
 
-    const handler = (notify) => notify(next, prev);
-    notifiers.forEach(handler);
-    state.unshift(next);
+  const prev = Object.freeze({ ...state[0] });
+  const next = Object.freeze({ ...action(prev) });
+
+  const handler = (notify) => notify(next, prev);
+  notifiers.forEach(handler);
+  state.unshift(next);
+};
+
+/**
+ * @param {Notify} notify
+ * @returns {EmptyFn}
+ */
+export const subscribe = (notify) => {
+  notifiers.push(notify);
+
+  const unsubscribe = () => {
+    notifiers = notifiers.filter((current) => current !== notify);
   };
 
-  /**
-   * @param {Notify} notify
-   * @returns {EmptyFn}
-   */
+  return unsubscribe;
+};
 
-  export const subscribe = (notify) => {
-    notifiers.push(notify);
+/**
+ * @returns {State}
+ */
+export const getState = () => {
+  return state[0];
+};
 
-    const unsubscribe = () => {
-      notifiers = notifiers.filter((current) => current !== notify);
-    };
-  
-    return unsubscribe;
-  };
-  
-  /**
-   * @returns {State}
-   */
-  export const getState = () => {
-    return state[0];
-  };
-  
- 
-  // Exporting store object with methods
-  export const store = {
-    update,
-    subscribe,
-    getState
-  };
-
-  
+// Exporting store object with methods
+export const store = {
+  update,
+  subscribe,
+  getState
+};

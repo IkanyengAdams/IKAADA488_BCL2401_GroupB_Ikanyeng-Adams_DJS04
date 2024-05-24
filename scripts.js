@@ -1,41 +1,20 @@
-//@ts-check
+import { store } from './store.js';
+import { add, subtract, reset } from './actions.js';
 
-import { subscribe, update, Action, Notify } from "./store.js";
+// Scenario 1: Initial State Verification
+console.log('Initial state:', store.getState()); // Should log { count: 0 }
 
+// Subscribe to state changes
+store.subscribe((next, prev) => {
+  console.log('State updated:', next);
+});
 
-const  handler = (next, prev) => console.log(prev, next);
-const unsubscribe = subscribe(handler);
+// Scenario 2: Incrementing the Counter
+store.update(add);
+store.update(add); // Should log { count: 2 }
 
+// Scenario 3: Decrementing the Counter
+store.update(subtract); // Should log { count: 1 }
 
-/**
- * @type {Notify}
- */
-const htmlHandler = (next, prev) => {
-  if (prev.wind.value === next.wind.value) return;
-
-  const div = document.createElement("div");
-  div.innerText = next.wind.value.toString();
-  document.body.appendChild(div);
-};
-
-subscribe(htmlHandler);
-
-/**
- * @type {Action}
- */
-const customAction = (state) => {
-  return {
-    ...state,
-    wind: {
-      ...state.wind,
-      value: state.wind.value + 19,
-    },
-  };
-};
-
-update(customAction);
-unsubscribe();
-
-update(customAction);
-update(customAction);
-update(customAction);
+// Scenario 4: Resetting the Counter
+store.update(reset); // Should log { count: 0 }
