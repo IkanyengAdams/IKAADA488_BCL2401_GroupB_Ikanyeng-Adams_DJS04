@@ -18,5 +18,3 @@ This project implements a Redux-inspired store to manage the state of a simple T
 -Incrementing and decrementing.
 - Ensuring state immutability while updating the state.
 - Properly managing the subscription and unsubscription of listeners.
-
-By implementing this store, we demonstrate the core concepts of state management and functional programming in a simplified context, adhering to the principles of Redux.
